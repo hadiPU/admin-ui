@@ -1,7 +1,26 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import UserCard from "./UserCard";
+import {getUsers} from "./Services"
 
 function Exercise() {
+  const[users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getUsers();
+        setUsers(data);
+      } catch (error) {
+        console.error("[Component] Gagal menampilkan data:", error.message);
+      }
+    };
+    fetchData();
+  }, []);
+
+
+/*/Filter hanya yang city-nya bukan semarang
+const nonSemarangUsers = users.filter((user) => user.city !== "Semarang");*/
+
   return (
     <>
       <div className="min-h-screen bg-gray-100 p-6">
@@ -9,21 +28,9 @@ function Exercise() {
           User Cards
         </h1>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <UserCard name="Hadi"
-          email="hadi@example.com"
-          street="Jl Aribuana"
-          city="Semarang"
-          />
-          <UserCard name="Prio"
-          email="prio@example.com"
-          street="Jl Aribuana"
-          city="Jakarta"
-          />
-          <UserCard name="Utomo"
-          email="utomo@example.com"
-          street="Jl Aribuana"
-          city="Bandung"
-          />
+          {users.map((user, index) => (
+            <UserCard key = {index} {...user}/>
+          ))}
         </div>
       </div>
     </>
