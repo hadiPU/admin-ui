@@ -1,18 +1,5 @@
-const city = "Batang";
-const street = "Jl Pemuda";
+import postsData from "./postsData";
 
-export const getUsers = async () => {
-    try {
-      const response = await fetch("https://jsonplaceholder.typicode.com/users");
-      const users = await response.json();
-      return users.map((user) => ({
-        name: user.name,
-        email: user.email,
-        city,
-        street,
-      }));
-    } catch (error) {
-      console.error("[Services] Gagal mengambil data:", error.message);
-      throw error;
-    }
-};
+const posts = postsData.slice(0, 20);
+
+export default posts;
