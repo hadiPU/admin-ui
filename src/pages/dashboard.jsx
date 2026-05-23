@@ -7,7 +7,7 @@ function DashboardPage() {
     <MainLayout>
       <div className="grid sm:grid-cols-12 sm:grid-rows-3 gap-6 h-full">
 
-        {/* Baris 1 — 3 card masing-masing 4 kolom */}
+        
         <div className="sm:col-span-4">
           <Card
             title="Total Balance"
@@ -28,8 +28,7 @@ function DashboardPage() {
           />
         </div>
 
-        {/* Baris 2 & 3 */}
-        {/* Recent Transactions: 4 kolom, rentang 2 baris */}
+        
         <div className="sm:col-span-4 sm:row-span-2">
           <Card
             title="Recent Transactions"
@@ -37,14 +36,14 @@ function DashboardPage() {
             desc="Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi, autem porro asperiores numquam sed veritatis debitis beatae amet laboriosam fuga pariatur sapiente suscipit culpa facere voluptatem. Repellat asperiores doloribus earum!"
           />
         </div>
-        {/* Statistics: 8 kolom */}
+        
         <div className="sm:col-span-8">
           <Card
             title="Statistics"
             desc="Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi, autem porro asperiores numquam sed veritatis debitis beatae amet laboriosam fuga pariatur sapiente suscipit culpa facere voluptatem. Repellat asperiores doloribus earum!"
           />
         </div>
-        {/* Expenses Breakdown: 8 kolom */}
+        
         <div className="sm:col-span-8">
           <Card
             title="Expenses Breakdown"
