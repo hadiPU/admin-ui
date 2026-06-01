@@ -34,7 +34,7 @@ function CardRecentTransaction(props) {
             {filteredData.map((item) => (
               <div key={item.id} className="flex justify-between my-6">
                 <div className="flex">
-                  <div className="bg-special-bg text-gray-02 px-3 rounded-lg flex flex-col place-content-center">
+                  <div className="bg-gray-06 rounded-lg flex flex-col place-content-center">
                     {item.icon}
                   </div>
                   <div className="ms-4">
