@@ -6,6 +6,9 @@ import Icon from "../Elements/Icon";
 import { NavLink } from "react-router-dom";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { ThemeContext } from "../../context/ThemeContext";
+import { AuthContext } from "../../context/authContext";
+import { logoutService } from "../../context/authContext";
+
 function MainLayout(props) {
   const { children } = props;
   const themes = [
@@ -32,6 +35,19 @@ function MainLayout(props) {
     { id: 7, name: "Settings", icon: <Icon.Setting />, link: "/setting" },
   ];
 
+  const { user, logout } = useContext(AuthContext);
+  const handleLogout = async () => {
+    try {
+      await logoutService();
+      logout();
+    } catch (err) {
+      console.error(err);
+      if (err.status === 401) {
+        logout();
+      }
+    }
+  };
+
   return (
     <>
       <div className={`flex min-h-screen ${theme.name}`}>
@@ -42,8 +58,6 @@ function MainLayout(props) {
             <div className="mb-6">
               <Logo variant="secondary" />
             </div>
-
-            {/* Nav dinamis dengan map() - langkah 12 */}
             <nav>
               {menu.map((item) => (
                 <NavLink
@@ -78,14 +92,14 @@ function MainLayout(props) {
           {/* Bagian Bawah: Logout + Divider + User */}
           <div>
             {/* Logout */}
-            <NavLink to="/login">
+            <div onClick={handleLogout} className="cursor-pointer">
               <div className="flex bg-special-bg3 text-white px-4 py-3 rounded-md cursor-pointer">
                 <div className="mx-auto sm:mx-0 text-primary">
                   <Icon.Logout />
                 </div>
                 <div className="ms-3 hidden sm:block">Logout</div>
               </div>
-            </NavLink>
+            </div>
 
             {/* Divider */}
             <div className="border my-10 border-b-special-bg"></div>
@@ -94,7 +108,7 @@ function MainLayout(props) {
             <div className="flex justify-between items-center">
               <div>Avatar</div>
               <div className="hidden sm:block">
-                Username
+                {user.name}
                 <br />
                 View Profile
               </div>
@@ -110,7 +124,7 @@ function MainLayout(props) {
           {/* Header */}
           <header className="flex justify-between items-center bg-special-mainBg border-b border-gray-03 px-6 py-4">
             <div className="flex items-center">
-              <div className="font-bold text-gray-01">Username</div>
+              <div className="font-bold text-gray-01">{user.name}</div>
               <div className="flex text-gray-03">
                 <span className="text-gray-03 mx-1">&#xBB;</span>
               </div>
