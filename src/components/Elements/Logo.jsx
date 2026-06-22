@@ -10,7 +10,7 @@ function Logo(props) {
 
   return (
     <div
-      className={`font-poppins tracking-wide ${
+      className={`font-poppins tracking-wide text-center mb-8 ${
         variantClasses[variant] || variantClasses.primary
       }`}
     >
