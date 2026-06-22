@@ -11,7 +11,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import DashboardPage from "./pages/dashboard";
-import BalancePage from "./pages/Balance";
+import BalancePage from "./pages/balance";
 import { AuthContext } from "./context/authContext";
 
 function App() {
