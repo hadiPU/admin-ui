@@ -10,7 +10,7 @@ import {
   RouterProvider,
   Navigate,
 } from "react-router-dom";
-import DashboardPage from "./pages/Dashboard";
+import DashboardPage from "./pages/dashboard";
 import BalancePage from "./pages/Balance";
 import { AuthContext } from "./context/authContext";
 
