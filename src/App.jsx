@@ -2,8 +2,6 @@ import "./App.css";
 import SignInPage from "./pages/SignIn";
 import SignUpPage from "./pages/SignUp";
 import ErrorPage from "./pages/Error";
-//import DashboardPage from "./pages/dashboard";
-// import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { useContext } from "react";
 import {
   createBrowserRouter,
@@ -12,6 +10,7 @@ import {
 } from "react-router-dom";
 import DashboardPage from "./pages/dashboard";
 import BalancePage from "./pages/balance";
+import ExpensesPage from "./pages/Expenses";
 import { AuthContext } from "./context/authContext";
 
 function App() {
@@ -46,13 +45,21 @@ function App() {
         <NotRequireAuth>
           <SignUpPage />
         </NotRequireAuth>
-      ) ,
+      ),
     },
     {
       path: "/balance",
       element: (
         <RequireAuth>
           <BalancePage />
+        </RequireAuth>
+      ),
+    },
+    {
+      path: "/expense",
+      element: (
+        <RequireAuth>
+          <ExpensesPage />
         </RequireAuth>
       ),
     },

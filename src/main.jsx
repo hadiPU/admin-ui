@@ -4,6 +4,7 @@ import './index.css';
 import App from './App.jsx';
 import { ThemeContextProvider } from './context/ThemeContext.jsx';
 import { AuthContextProvider } from './context/authContext.jsx';
+import { DarkModeContextProvider } from './context/DarkModeContext.jsx';
 
 /*createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -22,7 +23,9 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthContextProvider>
       <ThemeContextProvider>
-        <App />
+        <DarkModeContextProvider>
+          <App />
+        </DarkModeContextProvider>
       </ThemeContextProvider>
     </AuthContextProvider>
   </StrictMode>

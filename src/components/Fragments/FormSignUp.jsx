@@ -1,65 +1,138 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import LabeledInput from "../Elements/LabeledInput";
 import Button from "../Elements/Button";
+import AppSnackbar from "../Elements/AppSnackbar";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { registerService } from "../../services/authService";
+
+const SignUpSchema = Yup.object().shape({
+  name: Yup.string().required("Nama wajib diisi"),
+  email: Yup.string().email("Email tidak valid").required("Email wajib diisi"),
+  password: Yup.string().required("Password wajib diisi"),
+});
 
 function FormSignUp() {
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  const handleCloseSnackbar = () => {
+    setSnackbar((prev) => ({ ...prev, open: false }));
+  };
+
   return (
     <>
       {/* form start */}
-      <div className="mt-10">
-        <h1 className="text-2xl font-bold text-center mb-10">
-          Create an account
-        </h1>
-        <form action="">
-          <div className="mb-6">
-            <LabeledInput
-              label="Name"
-              id="name"
-              type="text"
-              placeholder="Name"
-              name="name"
-            />
-          </div>
+      <div className="mt-16">
+        <Formik
+          initialValues={{
+            name: "",
+            email: "",
+            password: "",
+          }}
+          validationSchema={SignUpSchema}
+          onSubmit={async (values, { setSubmitting }) => {
+            try {
+              await registerService(values);
 
-          <div className="mb-6">
-            <LabeledInput
-              label="Email Address"
-              id="email"
-              type="email"
-              placeholder="hello@example.com"
-              name="email"
-            />
-          </div>
+              setSnackbar({
+                open: true,
+                message: "Register Berhasil",
+                severity: "success",
+              });
+            } catch (error) {
+              setSnackbar({
+                open: true,
+                message: error.msg || "Email sudah pernah digunakan sebelumnya",
+                severity: "error",
+              });
+            } finally {
+              setSubmitting(false);
+            }
+          }}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              {/* NAME */}
+              <div className="mb-6">
+                <Field name="name">
+                  {({ field }) => (
+                    <LabeledInput
+                      {...field}
+                      id="name"
+                      type="text"
+                      label="Name"
+                      placeholder="Tanzir Rahman"
+                    />
+                  )}
+                </Field>
+                <ErrorMessage
+                  name="name"
+                  component="p"
+                  className="text-red-500 text-xs mt-1"
+                />
+              </div>
 
-          <div className="mb-6">
-            <LabeledInput
-              label="Password"
-              id="password"
-              type="password"
-              placeholder="********"
-              name="password"
-            />
-          </div>
+              {/* EMAIL */}
+              <div className="mb-6">
+                <Field name="email">
+                  {({ field }) => (
+                    <LabeledInput
+                      {...field}
+                      id="email"
+                      type="email"
+                      label="Email Address"
+                      placeholder="hello@example.com"
+                    />
+                  )}
+                </Field>
+                <ErrorMessage
+                  name="email"
+                  component="p"
+                  className="text-red-500 text-xs mt-1"
+                />
+              </div>
 
-          <div className="mb-6 text-sm text-gray-03">
-            By continuing, you agree to our{" "}
-            <span className="text-primary">terms of service</span>.
-          </div>
+              {/* PASSWORD */}
+              <div className="mb-6">
+                <Field name="password">
+                  {({ field }) => (
+                    <LabeledInput
+                      {...field}
+                      id="password"
+                      type="password"
+                      label="Password"
+                      placeholder="●●●●●●●●●●●●●●"
+                    />
+                  )}
+                </Field>
+                <ErrorMessage
+                  name="password"
+                  component="p"
+                  className="text-red-500 text-xs mt-1"
+                />
+              </div>
 
-          <Button>Sign up</Button>
-        </form>
+              {/* BUTTON */}
+              <Button>{isSubmitting ? "Loading..." : "Register"}</Button>
+            </Form>
+          )}
+        </Formik>
       </div>
       {/* form end */}
 
-      {/* divider */}
+      {/* teks start */}
       <div className="my-9 px-7 flex flex-col justify-center items-center text-xs text-gray-03">
         <div className="border border-gray-05 w-full"></div>
-
         <div className="px-2 bg-special-mainBg absolute">or sign up with</div>
       </div>
+      {/* teks end */}
 
-      {/* google button */}
+      {/* sign up with google start */}
       <div className="mb-8">
         <Button type="button" variant="secondary">
           <span className="flex items-center justify-center">
@@ -93,15 +166,25 @@ function FormSignUp() {
           </span>
         </Button>
       </div>
+      {/* sign up with google end */}
 
-      {/* link */}
-      <div className="flex justify-center text-sm">
-        <span className="text-gray-03 mr-1">Already have an account?</span>
-
-        <Link to="/login" className="text-primary font-bold">
-          Sign in here
+      {/* link start */}
+      <div className="flex justify-center">
+        <span className="text-gray-03 text-sm mr-1">
+          Already have an account?
+        </span>
+        <Link to="/login" className="text-primary text-sm font-bold">
+          Sign In Here
         </Link>
       </div>
+      {/* link end */}
+
+      <AppSnackbar
+        open={snackbar.open}
+        message={snackbar.message}
+        severity={snackbar.severity}
+        onClose={handleCloseSnackbar}
+      />
     </>
   );
 }

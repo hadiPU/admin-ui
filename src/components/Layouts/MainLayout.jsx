@@ -5,9 +5,12 @@ import Input from "../Elements/Input";
 import Icon from "../Elements/Icon";
 import { NavLink } from "react-router-dom";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 import { ThemeContext } from "../../context/ThemeContext";
 import { AuthContext } from "../../context/authContext";
 import { logoutService } from "../../context/authContext";
+import DarkModeToggle from "../Elements/DarkModeToggle";
 
 function MainLayout(props) {
   const { children } = props;
@@ -19,7 +22,7 @@ function MainLayout(props) {
     { name: "theme-brown", bgcolor: "bg-[#8B4513]", color: "#8B4513" },
   ];
 
-    const { theme, setTheme } = useContext(ThemeContext);
+  const { theme, setTheme } = useContext(ThemeContext);
   const menu = [
     { id: 1, name: "Overview", icon: <Icon.Overview />, link: "/" },
     { id: 2, name: "Balances", icon: <Icon.Balance />, link: "/balance" },
@@ -36,7 +39,10 @@ function MainLayout(props) {
   ];
 
   const { user, logout } = useContext(AuthContext);
+  const [loggingOut, setLoggingOut] = useState(false);
+
   const handleLogout = async () => {
+    setLoggingOut(true);
     try {
       await logoutService();
       logout();
@@ -45,6 +51,8 @@ function MainLayout(props) {
       if (err.status === 401) {
         logout();
       }
+    } finally {
+      setLoggingOut(false);
     }
   };
 
@@ -52,7 +60,7 @@ function MainLayout(props) {
     <>
       <div className={`flex min-h-screen ${theme.name}`}>
         {/* ===== SIDEBAR ===== */}
-        <aside className="flex flex-col justify-between bg-special-bg text-white w-28 sm:w-56 py-6 px-4">
+        <aside className="flex flex-col justify-between bg-special-bg dark:bg-slate-900 text-white w-28 sm:w-56 py-6 px-4 border-r border-transparent dark:border-slate-700">
           {/* Bagian Atas: Logo + Nav */}
           <div>
             <div className="mb-6">
@@ -78,15 +86,19 @@ function MainLayout(props) {
             </nav>
           </div>
           <div>
-            Themes
-            <div className="flex flex-col sm:flex-row gap-2 items-center">
-              {themes.map((t) => (
-                <div
-                  key={t.name}
-                  className={`${t.bgcolor} w-6 h-6 rounded-md cursor-pointer mb-2`}
-                  onClick={() => setTheme(t)}
-                ></div>
-              ))}
+            <div className="mb-2 text-sm font-semibold text-white">Themes</div>
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex gap-2">
+                {themes.map((t) => (
+                  <button
+                    key={t.name}
+                    onClick={() => setTheme(t)}
+                    className={`${t.bgcolor} w-6 h-6 rounded-md hover:scale-110 transition`}
+                  />
+                ))}
+              </div>
+
+              <DarkModeToggle />
             </div>
           </div>
           {/* Bagian Bawah: Logout + Divider + User */}
@@ -108,9 +120,9 @@ function MainLayout(props) {
             <div className="flex justify-between items-center">
               <div>Avatar</div>
               <div className="hidden sm:block">
-                {user.name}
-                <br />
-                View Profile
+                <div className="font-semibold">{user.name}</div>
+
+                <div className="text-xs text-gray-400">View Profile</div>
               </div>
               <div className="hidden sm:block">
                 <Icon.Detail size={15} />
@@ -122,13 +134,17 @@ function MainLayout(props) {
         {/* ===== BAGIAN KANAN ===== */}
         <div className="flex flex-col flex-1 min-h-0">
           {/* Header */}
-          <header className="flex justify-between items-center bg-special-mainBg border-b border-gray-03 px-6 py-4">
+          <header className="flex justify-between items-center bg-special-mainBg dark:bg-slate-900 border-b border-gray-200 dark:border-slate-700 px-6 py-4">
             <div className="flex items-center">
-              <div className="font-bold text-gray-01">{user.name}</div>
+              <div className="font-bold text-gray-01 dark:text-white">
+                {user.name}
+              </div>
               <div className="flex text-gray-03">
                 <span className="text-gray-03 mx-1">&#xBB;</span>
               </div>
-              <div className="text-sm text-gray-02">May 19, 2023</div>
+              <div className="text-sm text-gray-02 dark:text-gray-400">
+                May 19, 2023
+              </div>
             </div>
             <div className="flex items-center gap-3">
               <div className="me-10">
@@ -136,18 +152,28 @@ function MainLayout(props) {
               </div>
               <Input
                 placeholder="Search..."
-                backgroundColor="bg-white"
-                border="border-white"
+                backgroundColor="bg-white dark:bg-slate-800"
+                border="border-gray-300 dark:border-slate-600"
               />
             </div>
           </header>
 
           {/* Main Content */}
-          <main className="flex-1 min-h-0 px-6 py-6 bg-special-mainBg overflow-auto">
+          <main className="flex-1 min-h-0 px-6 py-6 bg-special-mainBg dark:bg-gray-900 overflow-auto">
             {children}
           </main>
         </div>
       </div>
+
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (t) => t.zIndex.drawer + 1 }}
+        open={loggingOut}
+      >
+        <div className="flex flex-col items-center">
+          <CircularProgress color="inherit" />
+          <div className="mt-3">Logging Out</div>
+        </div>
+      </Backdrop>
     </>
   );
 }
